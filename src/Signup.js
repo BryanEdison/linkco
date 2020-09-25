@@ -28,13 +28,14 @@ const StyledHeader = styled.div`
     margin-bottom: 30px;
 `
 
- const Signup = () => {
-    let location = useLocation();
+ const Signup = (props) => {
+     const { username } = props.match.params
+     console.log(props)
      return (
          <StyledContainer>
              <SignupContainer>
              <StyledHeader>Sign up for your LinkCo account</StyledHeader>
-            <Form url={location.url}/>
+            <Form url={username}/>
              </SignupContainer>
          </StyledContainer>
      )

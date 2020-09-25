@@ -16,6 +16,13 @@ export default class Form extends Component {
             clickedRepeatPassword: false,
         }
     }
+
+    componentDidMount() {
+        if (!this.props.url) {
+            this.setState({username: ''})
+        }
+    }
+
     handleUsername = (event) => {
         this.setState({
             username: event.target.value
@@ -50,7 +57,7 @@ export default class Form extends Component {
     }
 
     handleClickUsername = () => {
-        this.setState({username: ''})
+        this.setState({username: '', clickedUsername: true})
     }
 
     handlePasswordClick = () => {
@@ -62,13 +69,15 @@ export default class Form extends Component {
     }
 
     render() {
+
+        const { email, username, password, confirmPassword, clickedPassword, clickedRepeatPassword, clickedEmail, clickedUsername } = this.state
         return (
             <form onSubmit={this.handleSubmit}>
                 <div>
-                    {this.state.clickedEmail ? 
+                    {clickedEmail ? 
                     <input
                     type='text'
-                    value={this.state.email}
+                    value={email}
                     onChange={this.handleEmail}
                     /> : <input
                     onClick={this.handleClickEmail}
@@ -77,21 +86,25 @@ export default class Form extends Component {
                     value={'Email'}
                     onChange={this.handleEmail}
                     /> }
-
                 </div>
                 <div>
-                    <input
+                    {clickedUsername ? <input
                     type="text"
-                    value={this.state.username}
+                    value={username}
                     onChange={this.handleUsername}
                     onClick={this.handleClickUsername}
-                    />
+                    /> : <input
+                    type="text"
+                    value={'username'}
+                    onChange={this.handleUsername}
+                    onClick={this.handleClickUsername}
+                    />}
                 </div>
                 <div>
-                       {this.state.clickedPassword ?
+                       {clickedPassword ?
                        <input
                         type="text"
-                        value={this.state.password}
+                        value={password}
                         onChange={this.handlePassword}
                        /> : 
                        <input
@@ -102,9 +115,9 @@ export default class Form extends Component {
                       />}
                 </div>
                 <div>
-                        {this.state.clickedRepeatPassword ? <input
+                        {clickedRepeatPassword ? <input
                         type="text"
-                        value={this.state.confirmPassword}
+                        value={confirmPassword}
                         onChange={this.handleConfirmPassword}
                         /> : <input
                         type="text"

@@ -61,7 +61,7 @@ const StyledRightHeader = styled.div`
                 <StyledHeader>linkco</StyledHeader>
                 <StyledRightHeader>
                     <StyledLogin>Log In</StyledLogin>
-                        <Link to="/signup" style={{ textDecoration: 'none' }}>
+                        <Link to="/signup/" style={{ textDecoration: 'none' }}>
                             <StyledSignup> Sign up free</StyledSignup>
                         </Link>
                 </StyledRightHeader>

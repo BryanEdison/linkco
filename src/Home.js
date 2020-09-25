@@ -71,13 +71,17 @@ const StyledInput = styled.input`
   border-width: 0px;
   display: block;
   height: inherit;
-  max-width: 100%;
+  max-width: 50%;
   outline: none;
   line-height: inherit;
   font-size: inherit;
   letter-spacing: inherit;
   border: none;
   color: ${props => props.clickedInput ? "black" : "grey"};
+
+  @media only screen and (min-width: 400px) {
+    max-width: 100%;
+  }
 `
 const StyledSpan = styled.span`
   font-weight: 100;
@@ -148,10 +152,10 @@ export default class Home extends Component {
         <StyledForm>
           <StyledInputContainer>
             <span>
-              linkco.in
+              linkco.in/
             </span>
             { !this.state.clickedInput &&  <StyledSpan
-            >/</StyledSpan> }
+            >|</StyledSpan> }
             {this.state.clickedInput ? <StyledInput
               type='text'
               value={`${this.state.url}`}
@@ -166,10 +170,8 @@ export default class Home extends Component {
               onClick={this.handleClick}
             /> }
             { this.state.url && 
-            <Link to={{     
-              pathname: '/signup',
-              url:this.state.url
-             }} style={{ textDecoration: 'none' }}><Circle>&#8594;</Circle>
+            <Link to={`/signup/${this.state.url}`}
+              style={{ textDecoration: 'none' }}><Circle>&#8594;</Circle>
             </Link> }
           </StyledInputContainer>
         </StyledForm>

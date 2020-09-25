@@ -16,7 +16,9 @@ import Signup from './Signup';
               renders the first one that matches the current URL. */}
           <Switch>
             <Route exact path="/" component={Home}/>
-            <Route path="/signup" component={Signup}/>
+            <Route path="/signup/:username" component={Signup}/>
+            <Route exact path="/signup/" component={Signup}/>
+
           </Switch>
         </div>
       </Router>
