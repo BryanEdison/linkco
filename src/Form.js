@@ -4,64 +4,114 @@ import React, { Component } from 'react'
 export default class Form extends Component {
     constructor(props) {
         super(props)
-
+        //possibly antipattern to copy state from props but can't think of better solution for usecase
         this.state = {
-            username: '',
-            comments: '',
-            topic: 'React',
+            username: this.props.url,
+            email: '',
+            password: '',
+            confirmPassword: '',
+            clickedEmail: false,
+            clickedUsername: false,
+            clickedPassword: false,
+            clickedRepeatPassword: false,
         }
     }
-
-    handleUsernameChange = (event) => {
+    handleUsername = (event) => {
         this.setState({
             username: event.target.value
         })
     }
 
-    handleCommentsChange = (event) => {
+    handleEmail = (event) => {
         this.setState({
-            comments: event.target.value
+            email: event.target.value
         })
     }
 
-    handleTopicChange = (event) => {
+    handlePassword = (event) => {
         this.setState({
-            topic: event.target.value
+            password: event.target.value
+        })
+    }
+
+    handleConfirmPassword = (event) => {
+        this.setState({
+            confirmPassword: event.target.value
         })
     }
 
     handleSubmit = (event) => {
-        alert(`${this.state.username} ${this.state.comments} ${this.state.topic}`)
+        alert(`${this.state.username} ${this.state.email} ${this.state.password}`)
         event.preventDefault()
+    }
+    
+    handleClickEmail = () => {
+        this.setState({clickedEmail: true})
+    }
+
+    handleClickUsername = () => {
+        this.setState({username: ''})
+    }
+
+    handlePasswordClick = () => {
+        this.setState({ clickedPassword: true })
+    }
+
+    handleRepeatPasswordClick = () => {
+        this.setState({ clickedRepeatPassword: true})
     }
 
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                Form Component
                 <div>
-                    <label> Username </label>
+                    {this.state.clickedEmail ? 
                     <input
                     type='text'
-                    value={this.state.username}
-                    onChange={this.handleUsernameChange}
-                    />
+                    value={this.state.email}
+                    onChange={this.handleEmail}
+                    /> : <input
+                    onClick={this.handleClickEmail}
+                    onBlur={this.handleBlurEmail}
+                    type='text'
+                    value={'Email'}
+                    onChange={this.handleEmail}
+                    /> }
 
                 </div>
                 <div>
-                    <label>Comments</label>
-                    <textarea
-                    value={this.state.comments}
-                    onChange={this.handleCommentsChange}
+                    <input
+                    type="text"
+                    value={this.state.username}
+                    onChange={this.handleUsername}
+                    onClick={this.handleClickUsername}
                     />
                 </div>
                 <div>
-                    <label>Topic</label>
-                    <select value={this.state.topic} onChange={this.handleTopicChange}>
-                        <option value="React"> React </option>
-                        <option value="Vue"> Vue </option>
-                        <option value="Angular"> Angular </option>
-                    </select>
+                       {this.state.clickedPassword ?
+                       <input
+                        type="text"
+                        value={this.state.password}
+                        onChange={this.handlePassword}
+                       /> : 
+                       <input
+                       type="text"
+                       value={"Password"}
+                       onChange={this.handlePassword}
+                       onClick={this.handlePasswordClick}
+                      />}
+                </div>
+                <div>
+                        {this.state.clickedRepeatPassword ? <input
+                        type="text"
+                        value={this.state.confirmPassword}
+                        onChange={this.handleConfirmPassword}
+                        /> : <input
+                        type="text"
+                        value={"Repeat Password"}
+                        onClick={this.handleRepeatPasswordClick}
+                        onChange={this.handleConfirmPassword}
+                        /> }
                 </div>
                 <button type="submit">Submit</button>
             </form>

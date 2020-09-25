@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Form from './Form';
 import styled from 'styled-components';
 import Header from './Header';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import './App.css';
 
 const StyledContainer = styled.div`
@@ -165,7 +165,12 @@ export default class Home extends Component {
               onBlur={this.handleBlur}
               onClick={this.handleClick}
             /> }
-            { this.state.url && <Circle>&#8594;</Circle> }
+            { this.state.url && 
+            <Link to={{     
+              pathname: '/signup',
+              url:this.state.url
+             }} style={{ textDecoration: 'none' }}><Circle>&#8594;</Circle>
+            </Link> }
           </StyledInputContainer>
         </StyledForm>
         </StyledFormContainer>

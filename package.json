@@ -16,7 +16,6 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "buildh": "heroku buildpacks:set mars/create-react-app",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

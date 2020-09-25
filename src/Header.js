@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 
 const StyledHeader = styled.div`
@@ -60,7 +61,9 @@ const StyledRightHeader = styled.div`
                 <StyledHeader>linkco</StyledHeader>
                 <StyledRightHeader>
                     <StyledLogin>Log In</StyledLogin>
-                    <StyledSignup> Sign up free</StyledSignup>
+                        <Link to="/signup" style={{ textDecoration: 'none' }}>
+                            <StyledSignup> Sign up free</StyledSignup>
+                        </Link>
                 </StyledRightHeader>
             </StyledHeaderContainer>
         </StyledContainer>
