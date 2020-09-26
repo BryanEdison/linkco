@@ -1,5 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import styled from 'styled-components';
 
+const StyledMismatchError = styled.div`
+    color: white;
+    background-color: red;
+    border-radius: 5px;
+`
+
+const StyledInput = styled.input`
+    margin: 5px;
+`
 
 export default class Form extends Component {
     constructor(props) {
@@ -14,6 +24,7 @@ export default class Form extends Component {
             clickedUsername: false,
             clickedPassword: false,
             clickedRepeatPassword: false,
+            showPasswordMismatchError: false,
         }
     }
 
@@ -36,18 +47,27 @@ export default class Form extends Component {
     }
 
     handlePassword = (event) => {
+        if (this.state.password === this.state.confirmPassword) {
+            this.setState({showPasswordMismatchError: false})
+        }
         this.setState({
             password: event.target.value
         })
     }
 
     handleConfirmPassword = (event) => {
+        if (this.state.password === this.state.confirmPassword) {
+            this.setState({showPasswordMismatchError: false})
+        }
         this.setState({
             confirmPassword: event.target.value
         })
     }
 
     handleSubmit = (event) => {
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({showPasswordMismatchError: true})
+        }
         alert(`${this.state.username} ${this.state.email} ${this.state.password}`)
         event.preventDefault()
     }
@@ -57,6 +77,8 @@ export default class Form extends Component {
     }
 
     handleClickUsername = () => {
+        //two if conditions to set state to username or typed input depending on clickk and if empty
+        if (this.state.username === 'username')
         this.setState({username: '', clickedUsername: true})
     }
 
@@ -68,18 +90,24 @@ export default class Form extends Component {
         this.setState({ clickedRepeatPassword: true})
     }
 
+    handleConfirmPasswordBlur = () => {
+        if (this.state.password !== this.state.confirmPassword) {
+            this.setState({ showPasswordMismatchError: true})
+        }
+    }
+
     render() {
 
-        const { email, username, password, confirmPassword, clickedPassword, clickedRepeatPassword, clickedEmail, clickedUsername } = this.state
+        const { email, username, password, confirmPassword, clickedPassword, clickedRepeatPassword, clickedEmail, clickedUsername, showPasswordMismatchError } = this.state
         return (
             <form onSubmit={this.handleSubmit}>
                 <div>
                     {clickedEmail ? 
-                    <input
+                    <StyledInput
                     type='text'
                     value={email}
                     onChange={this.handleEmail}
-                    /> : <input
+                    /> : <StyledInput
                     onClick={this.handleClickEmail}
                     onBlur={this.handleBlurEmail}
                     type='text'
@@ -88,26 +116,26 @@ export default class Form extends Component {
                     /> }
                 </div>
                 <div>
-                    {clickedUsername ? <input
+                    {clickedUsername ? <StyledInput
                     type="text"
                     value={username}
                     onChange={this.handleUsername}
                     onClick={this.handleClickUsername}
-                    /> : <input
+                    /> : <StyledInput
                     type="text"
-                    value={'username'}
+                    value={username || 'username'}
                     onChange={this.handleUsername}
                     onClick={this.handleClickUsername}
                     />}
                 </div>
                 <div>
                        {clickedPassword ?
-                       <input
+                       <StyledInput
                         type="text"
                         value={password}
                         onChange={this.handlePassword}
                        /> : 
-                       <input
+                       <StyledInput
                        type="text"
                        value={"Password"}
                        onChange={this.handlePassword}
@@ -115,18 +143,22 @@ export default class Form extends Component {
                       />}
                 </div>
                 <div>
-                        {clickedRepeatPassword ? <input
+                        {clickedRepeatPassword ? <StyledInput
                         type="text"
                         value={confirmPassword}
                         onChange={this.handleConfirmPassword}
-                        /> : <input
+                        onBlur={this.handleConfirmPasswordBlur}
+                        /> : <StyledInput
                         type="text"
                         value={"Repeat Password"}
                         onClick={this.handleRepeatPasswordClick}
                         onChange={this.handleConfirmPassword}
+                        onBlur={this.handleConfirmPasswordBlur}
                         /> }
                 </div>
-                <button type="submit">Submit</button>
+                        {showPasswordMismatchError && <StyledMismatchError>Password and Repeat Password fields must match
+</StyledMismatchError> }
+                <button disabled={showPasswordMismatchError} type="submit">Submit</button>
             </form>
         )
     }
