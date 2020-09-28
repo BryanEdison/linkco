@@ -8,7 +8,17 @@ const StyledMismatchError = styled.div`
 `
 
 const StyledInput = styled.input`
-    margin: 5px;
+    margin: 30px 0;
+    border-width: 0px;
+    display: block;
+    height: inherit;
+    border-bottom: 1px solid #d7dce1;
+    width: 100%;
+    outline: none;
+    line-height: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    color: ${props => props.clickedInput ? "black" : "grey"};
 `
 
 export default class Form extends Component {
@@ -20,18 +30,15 @@ export default class Form extends Component {
             email: 'email',
             password: 'password',
             confirmPassword: 'confirm password',
-            clickedEmail: false,
-            clickedUsername: false,
-            clickedPassword: false,
-            clickedRepeatPassword: false,
             showPasswordMismatchError: false,
-            minimumCharError: false
+            minimumCharError: false,
+            showPasswordNumberRequiredError: false,
         }
     }
 
     componentDidMount() {
         if (!this.props.url) {
-            this.setState({username: 'username'})
+            this.setState({ username: 'username' })
         }
     }
 
@@ -48,31 +55,47 @@ export default class Form extends Component {
     }
 
     handlePassword = (event) => {
-        if (this.state.password === this.state.confirmPassword) {
-            this.setState({showPasswordMismatchError: false})
-        }
         this.setState({
             password: event.target.value
         })
+        if (event.target.value === this.state.confirmPassword) {
+            this.setState({ showPasswordMismatchError: false })
+        }
+        if (event.target.value !== this.state.confirmPassword && this.state.confirmPassword !== 'confirm password') {
+            this.setState({ showPasswordMismatchError: true })
+        }
+        if (event.target.value.length > 5) {
+            this.setState({ minimumCharError: false })
+        }
+
+        let hasNumber = /\d/;
+
+        if (hasNumber.test(event.target.value)) {
+            this.setState({ showPasswordNumberRequiredError: false })
+        }
     }
 
     handleConfirmPassword = (event) => {
-        if (this.state.password === this.state.confirmPassword) {
-            this.setState({showPasswordMismatchError: false})
+        if (this.state.password === this.state.confirmPassword &&
+            this.state.confirmPassword !== event.target.value) {
+            this.setState({ showPasswordMismatchError: true })
         }
         this.setState({
             confirmPassword: event.target.value
         })
+        if (this.state.password === event.target.value) {
+            this.setState({ showPasswordMismatchError: false })
+        }
     }
 
     handleSubmit = (event) => {
         if (this.state.password !== this.state.confirmPassword) {
-            this.setState({showPasswordMismatchError: true})
+            this.setState({ showPasswordMismatchError: true })
         }
         alert(`${this.state.username} ${this.state.email} ${this.state.password}`)
         event.preventDefault()
     }
-    
+
     handleClickEmail = () => {
         if (this.state.email === 'email') {
             this.setState({ email: '' })
@@ -81,54 +104,60 @@ export default class Form extends Component {
 
     handleBlurEmail = () => {
         if (this.state.email === '') {
-            this.setState({ email: 'email'})
+            this.setState({ email: 'email' })
         }
     }
 
     handleClickUsername = () => {
-        //two if conditions to set state to username or typed input depending on click and if empty
         if (this.state.username === 'username') {
-            this.setState({username: '', clickedUsername: true})
+            this.setState({ username: '' })
         }
     }
 
     handleClickUsernameBlur = () => {
         if (this.state.username === '') {
-            this.setState({username: 'username', clickedUsername: false})
+            this.setState({ username: 'username' })
         }
     }
 
     handlePasswordClick = () => {
-        this.setState({ password: '' })
+        if (this.state.password === 'password') {
+            this.setState({ password: '' })
+        }
     }
 
     handleRepeatPasswordClick = () => {
         if (this.state.confirmPassword === 'confirm password') {
-            this.setState({ confirmPassword: ''})
+            this.setState({ confirmPassword: '' })
         }
     }
 
     handleConfirmPasswordBlur = () => {
-        if (this.state.password !== this.state.confirmPassword) {
-            this.setState({ showPasswordMismatchError: true})
-        }
         if (this.state.confirmPassword === '') {
-            this.setState({confirmPassword: 'confirm password'})
+            this.setState({ confirmPassword: 'confirm password' })
+        } else if (this.state.password !== this.state.confirmPassword && this.state.confirmPassword !== 'confirm password') {
+            this.setState({ showPasswordMismatchError: true })
         }
     }
 
     handlePasswordBlur = () => {
         if (this.state.password === '') {
-            this.setState({password: 'password'})
-        }
-        if (this.state.password.length < 6) {
-            this.setState({ minimumCharError: true })
+            this.setState({ password: 'password' })
+        } else {
+            if (this.state.password.length < 6) {
+                this.setState({ minimumCharError: true })
+            }
+            let hasNumber = /\d/;
+
+            if (!hasNumber.test(this.state.password)) {
+                this.setState({ showPasswordNumberRequiredError: true })
+            }
         }
     }
 
     render() {
 
-        const { email, username, password, confirmPassword, minimumCharError, showPasswordMismatchError } = this.state
+        const { email, username, password, confirmPassword, minimumCharError, showPasswordMismatchError, showPasswordNumberRequiredError } = this.state
         return (
             <form onSubmit={this.handleSubmit}>
                 <div>
@@ -142,35 +171,37 @@ export default class Form extends Component {
                 </div>
                 <div>
                     <StyledInput
-                    type="text"
-                    value={username}
-                    onChange={this.handleUsername}
-                    onClick={this.handleClickUsername}
-                    onBlur={this.handleClickUsernameBlur}
+                        type="text"
+                        value={username}
+                        onChange={this.handleUsername}
+                        onClick={this.handleClickUsername}
+                        onBlur={this.handleClickUsernameBlur}
                     />
                 </div>
                 <div>
-                       <StyledInput
-                       type="text"
-                       value={password}
-                       onChange={this.handlePassword}
-                       onClick={this.handlePasswordClick}
-                       onBlur={this.handlePasswordBlur}
-                      />
+                    <StyledInput
+                        type="text"
+                        value={password}
+                        onChange={this.handlePassword}
+                        onClick={this.handlePasswordClick}
+                        onBlur={this.handlePasswordBlur}
+                    />
                 </div>
-                    {minimumCharError && <StyledMismatchError>Password must be at least 6 characters
-    </StyledMismatchError> }
+                {minimumCharError && <StyledMismatchError>Password must be at least 6 characters
+    </StyledMismatchError>}
+                {showPasswordNumberRequiredError && <StyledMismatchError>Password must contain at least 1 number
+    </StyledMismatchError>}
                 <div>
-                        <StyledInput
+                    <StyledInput
                         type="text"
                         value={confirmPassword}
                         onClick={this.handleRepeatPasswordClick}
                         onChange={this.handleConfirmPassword}
                         onBlur={this.handleConfirmPasswordBlur}
-                        />
+                    />
                 </div>
-                        {showPasswordMismatchError && <StyledMismatchError>Password and Repeat Password fields must match
-</StyledMismatchError> }
+                {showPasswordMismatchError && <StyledMismatchError>Password and Repeat Password fields must match
+</StyledMismatchError>}
                 <button disabled={showPasswordMismatchError} type="submit">Submit</button>
             </form>
         )

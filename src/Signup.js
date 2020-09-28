@@ -19,7 +19,7 @@ const StyledContainer = styled.div`
 `
 
 const SignupContainer = styled.div`
-    margin: 100px;
+    margin: 100px 0;
 `
 
 const StyledHeader = styled.div`
