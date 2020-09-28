@@ -54,7 +54,7 @@ const StyledRightHeader = styled.div`
     align-items: center;
 `
 
- const Header = () => {
+ const Header = (props) => {
     return (
         <StyledContainer>
             <StyledHeaderContainer>

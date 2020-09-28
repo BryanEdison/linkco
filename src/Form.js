@@ -21,6 +21,17 @@ const StyledInput = styled.input`
     color: ${props => props.clickedInput ? "black" : "grey"};
 `
 
+const StyledButton = styled.button`
+    background-color: #8ccfe4;
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    margin-top: 30px;
+    padding: 9px 14px;
+    color: white;
+    font-weight: bolder;
+`
+
 export default class Form extends Component {
     constructor(props) {
         super(props)
@@ -202,7 +213,7 @@ export default class Form extends Component {
                 </div>
                 {showPasswordMismatchError && <StyledMismatchError>Password and Repeat Password fields must match
 </StyledMismatchError>}
-                <button disabled={showPasswordMismatchError} type="submit">Submit</button>
+                <StyledButton disabled={showPasswordMismatchError} type="submit">Submit</StyledButton>
             </form>
         )
     }
