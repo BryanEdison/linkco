@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const StyledMismatchError = styled.div`
     color: white;
+    margin: 2px;
     background-color: red;
     border-radius: 5px;
     padding: 0 10px;
@@ -11,7 +13,7 @@ const StyledMismatchError = styled.div`
 const StyledInput = styled.input`
     margin: 30px 0;
     border-width: 0px;
-    display: block;
+    display: block;   
     height: inherit;
     border-bottom: 1px solid #d7dce1;
     width: 100%;
@@ -20,6 +22,23 @@ const StyledInput = styled.input`
     font-size: inherit;
     letter-spacing: inherit;
     color: ${props => props.clickedInput ? "black" : "grey"};
+`
+
+const StyledSpan = styled.span`
+    border-width: 0px;
+    display: block;
+    padding: 1px 0px;
+    height: inherit;
+    border-bottom: 1px solid #d7dce1;
+    outline: none;
+    line-height: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+`
+
+const StyledInputContainer = styled.div`
+    display: flex;
+    align-items: center; 
 `
 
 const StyledButton = styled.button`
@@ -44,8 +63,8 @@ export default class Form extends Component {
         this.state = {
             username: this.props.url,
             email: 'email',
-            password: 'password',
-            confirmPassword: 'confirm password',
+            password: '',
+            confirmPassword: '',
             showPasswordMismatchError: false,
             minimumCharError: false,
             showPasswordNumberRequiredError: false,
@@ -77,7 +96,7 @@ export default class Form extends Component {
         if (event.target.value === this.state.confirmPassword) {
             this.setState({ showPasswordMismatchError: false })
         }
-        if (event.target.value !== this.state.confirmPassword && this.state.confirmPassword !== 'confirm password') {
+        if (event.target.value !== this.state.confirmPassword && this.state.confirmPassword !== '') {
             this.setState({ showPasswordMismatchError: true })
         }
         if (event.target.value.length > 5) {
@@ -136,22 +155,8 @@ export default class Form extends Component {
         }
     }
 
-    handlePasswordClick = () => {
-        if (this.state.password === 'password') {
-            this.setState({ password: '' })
-        }
-    }
-
-    handleRepeatPasswordClick = () => {
-        if (this.state.confirmPassword === 'confirm password') {
-            this.setState({ confirmPassword: '' })
-        }
-    }
-
     handleConfirmPasswordBlur = () => {
-        if (this.state.confirmPassword === '') {
-            this.setState({ confirmPassword: 'confirm password' })
-        } else if (this.state.password !== this.state.confirmPassword && this.state.confirmPassword !== 'confirm password') {
+        if (this.state.password !== this.state.confirmPassword && this.state.confirmPassword !== '') {
             this.setState({ showPasswordMismatchError: true })
         }
     }
@@ -185,7 +190,8 @@ export default class Form extends Component {
                         onChange={this.handleEmail}
                     />
                 </div>
-                <div>
+                <StyledInputContainer>
+                    <StyledSpan>linkco.in/</StyledSpan>
                     <StyledInput
                         type="text"
                         value={username}
@@ -193,13 +199,13 @@ export default class Form extends Component {
                         onClick={this.handleClickUsername}
                         onBlur={this.handleClickUsernameBlur}
                     />
-                </div>
+                </StyledInputContainer>
                 <div>
+                <div>Password</div>
                     <StyledInput
                         type="password"
                         value={password}
                         onChange={this.handlePassword}
-                        onClick={this.handlePasswordClick}
                         onBlur={this.handlePasswordBlur}
                     />
                 </div>
@@ -208,10 +214,10 @@ export default class Form extends Component {
                 {showPasswordNumberRequiredError && <StyledMismatchError>Password must contain at least 1 number
     </StyledMismatchError>}
                 <div>
+                    <div>Confirm Password</div>
                     <StyledInput
                         type="password"
                         value={confirmPassword}
-                        onClick={this.handleRepeatPasswordClick}
                         onChange={this.handleConfirmPassword}
                         onBlur={this.handleConfirmPasswordBlur}
                     />
@@ -219,7 +225,9 @@ export default class Form extends Component {
                 {showPasswordMismatchError && <StyledMismatchError>Password fields must match
 </StyledMismatchError>}
                 <StyledButton disabled={showPasswordMismatchError} type="submit">Submit</StyledButton>
-                <StyledSignin>Already have an account?</StyledSignin>
+                <Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
+                    <StyledSignin>Already have an account?</StyledSignin>
+                    </Link>
             </form>
         )
     }

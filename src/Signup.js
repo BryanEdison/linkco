@@ -8,12 +8,12 @@ const StyledContainer = styled.div`
     flex-direction: column;
     align-items: center;
     min-height: 30vh;
-    padding: 50px;
     background-color: #f9f9f9;
 
     @media only screen and (min-width: 440px) {
         min-height: 100vh;
         margin: 0px;
+        padding: 50px;
     }
 `
 
@@ -25,8 +25,11 @@ const SignupContainer = styled.div`
 `
 
 const StyledHeader = styled.div`
-    font-size: 24px;
+    font-size: 18px;
     margin-bottom: 30px;
+    @media only screen and (min-width: 440px) {
+        font-size: 24px;
+    }
 `
 
  const Signup = (props) => {

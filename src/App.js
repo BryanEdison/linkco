@@ -7,6 +7,7 @@ import {
   } from "react-router-dom";
 import Home from './Home';
 import Signup from './Signup';
+import Login from './Login';
 
   export default function App() {
     return (
@@ -18,7 +19,7 @@ import Signup from './Signup';
             <Route exact path="/" component={Home}/>
             <Route path="/signup/:username" component={Signup}/>
             <Route exact path="/signup/" component={Signup}/>
-
+            <Route exact path="/login/" component={Login}/>
           </Switch>
         </div>
       </Router>
