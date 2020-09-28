@@ -5,6 +5,7 @@ const StyledMismatchError = styled.div`
     color: white;
     background-color: red;
     border-radius: 5px;
+    padding: 0 10px;
 `
 
 const StyledInput = styled.input`
@@ -26,10 +27,14 @@ const StyledButton = styled.button`
     width: 100%;
     border: 0;
     border-radius: 8px;
-    margin-top: 30px;
+    margin: 20px 0;
     padding: 9px 14px;
     color: white;
     font-weight: bolder;
+`
+
+const StyledSignin = styled.div`
+    text-align: center;
 `
 
 export default class Form extends Component {
@@ -191,7 +196,7 @@ export default class Form extends Component {
                 </div>
                 <div>
                     <StyledInput
-                        type="text"
+                        type="password"
                         value={password}
                         onChange={this.handlePassword}
                         onClick={this.handlePasswordClick}
@@ -204,16 +209,17 @@ export default class Form extends Component {
     </StyledMismatchError>}
                 <div>
                     <StyledInput
-                        type="text"
+                        type="password"
                         value={confirmPassword}
                         onClick={this.handleRepeatPasswordClick}
                         onChange={this.handleConfirmPassword}
                         onBlur={this.handleConfirmPasswordBlur}
                     />
                 </div>
-                {showPasswordMismatchError && <StyledMismatchError>Password and Repeat Password fields must match
+                {showPasswordMismatchError && <StyledMismatchError>Password fields must match
 </StyledMismatchError>}
                 <StyledButton disabled={showPasswordMismatchError} type="submit">Submit</StyledButton>
+                <StyledSignin>Already have an account?</StyledSignin>
             </form>
         )
     }

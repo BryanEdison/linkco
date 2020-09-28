@@ -1,14 +1,12 @@
 import React from 'react';
 import Form from './Form';
 import styled from 'styled-components';
-import Header from './Header';
 
 
 const StyledContainer = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    text-align: center;
     min-height: 30vh;
     padding: 50px;
     background-color: #f9f9f9;
