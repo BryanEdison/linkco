@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 
 const StyledContainer = styled.div`
@@ -81,11 +82,15 @@ const StyledInput = styled.input`
                 />     
                 <div>Password</div>           
                 <StyledInput
-                    type="text"
+                    type="password"
                     value={password}
                     onChange={this.handlePassword}
                     onClick={this.handleClickPassword}
                 />
+                <div>Forgot your password? Click here to reset</div>
+                    <Link to="/signup/" style={{ color: '#635858', textDecoration: 'none' }}>
+                        <div>Don't have an account?</div>
+                    </Link>
                 </SignupContainer>
             </StyledContainer>
         )
