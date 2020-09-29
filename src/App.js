@@ -2,12 +2,12 @@ import React from "react";
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    Link
+    Route
   } from "react-router-dom";
 import Home from './Home';
 import Signup from './Signup';
 import Login from './Login';
+import Profile from './Profile';
 
   export default function App() {
     return (
@@ -20,6 +20,7 @@ import Login from './Login';
             <Route path="/signup/:username" component={Signup}/>
             <Route exact path="/signup/" component={Signup}/>
             <Route exact path="/login/" component={Login}/>
+            <Route exact path="/profile" component={Profile}/>
           </Switch>
         </div>
       </Router>
