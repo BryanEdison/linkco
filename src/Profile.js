@@ -23,13 +23,18 @@ const StyledDiv = styled.div`
 `;
 
 const StyledLinkBox = styled.a`
-  width: 500px;
-  height: 30px;
+  width: 200px;
+  height: 10px;
   background-color: blue;
   margin: 10px;
   text-decoration: none;
   color: white;
   border-radius: 4px;
+
+  @media only screen and (min-width: 440px) {
+    width: 500px;
+    height: 30px;
+  }
 `
 
 const StyledHeader = styled.div`
