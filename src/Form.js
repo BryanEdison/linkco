@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { isEmail } from "validator";
+
+import AuthService from "./services/auth.service";
+
 
 const StyledMismatchError = styled.div`
     color: white;
@@ -68,6 +72,9 @@ export default class Form extends Component {
             showPasswordMismatchError: false,
             minimumCharError: false,
             showPasswordNumberRequiredError: false,
+            notValidEmailError: false,
+            usernameExists: false,
+            emailExists: false
         }
     }
 
@@ -81,12 +88,42 @@ export default class Form extends Component {
         this.setState({
             username: event.target.value
         })
+        if (this.state.usernameExists) {
+            AuthService.checkUserName(
+                event.target.value
+              ).then(
+                response => {
+                  this.setState({usernameExists: false})
+                },
+                error => {
+                  this.setState({usernameExists: true})
+                }
+              );
+        }
     }
 
     handleEmail = (event) => {
         this.setState({
             email: event.target.value
         })
+        if (isEmail(event.target.value)) {
+            this.setState({notValidEmailError: false})
+        } else {
+            if (this.state.emailExists) {
+                AuthService.checkEmail(
+                    event.target.value
+                  ).then(
+                    response => {
+                      this.setState({emailExists: false})
+                      console.log(response)
+                    },
+                    error => {
+                        console.log(error)
+                      this.setState({emailExists: true})
+                    }
+                  );
+            }
+        }
     }
 
     handlePassword = (event) => {
@@ -127,8 +164,29 @@ export default class Form extends Component {
         if (this.state.password !== this.state.confirmPassword) {
             this.setState({ showPasswordMismatchError: true })
         }
-        alert(`${this.state.username} ${this.state.email} ${this.state.password}`)
-        event.preventDefault()
+
+      event.preventDefault()
+    
+        AuthService.register(
+          this.state.username,
+          this.state.email,
+          this.state.password
+        ).then(
+          response => {
+            console.log(response.data.message)
+          },
+          error => {
+            const resMessage =
+              (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+              error.message ||
+              error.toString();
+  
+            console.log(resMessage)
+          }
+        );
+
     }
 
     handleClickEmail = () => {
@@ -137,9 +195,25 @@ export default class Form extends Component {
         }
     }
 
-    handleBlurEmail = () => {
-        if (this.state.email === '') {
+    handleBlurEmail = (event) => {
+        if (!isEmail(event.target.value)) {
+            this.setState({notValidEmailError: true})
+        } else if (this.state.email === '') {
             this.setState({ email: 'email' })
+        }
+        if (this.state.email !== '') {
+            AuthService.checkEmail(
+                event.target.value
+              ).then(
+                response => {
+                  this.setState({emailExists: false})
+                  console.log('email', response)
+                },
+                error => {
+                    console.log('email',error)
+                  this.setState({emailExists: true})
+                }
+              );
         }
     }
 
@@ -153,6 +227,18 @@ export default class Form extends Component {
         if (this.state.username === '') {
             this.setState({ username: 'username' })
         }
+        AuthService.checkUserName(
+            this.state.username
+          ).then(
+            response => {
+              this.setState({usernameExists: false})
+              console.log(response)
+            },
+            error => {
+                console.log(error)
+              this.setState({usernameExists: true})
+            }
+          );
     }
 
     handleConfirmPasswordBlur = () => {
@@ -178,7 +264,11 @@ export default class Form extends Component {
 
     render() {
 
-        const { email, username, password, confirmPassword, minimumCharError, showPasswordMismatchError, showPasswordNumberRequiredError } = this.state
+        const { email, emailExists, username, password, confirmPassword, minimumCharError,
+            showPasswordMismatchError, showPasswordNumberRequiredError,
+            notValidEmailError, usernameExists } = this.state
+
+        const disableSubmitButton = minimumCharError || showPasswordMismatchError || showPasswordNumberRequiredError || notValidEmailError;
         return (
             <form onSubmit={this.handleSubmit}>
                 <div>
@@ -190,6 +280,10 @@ export default class Form extends Component {
                         onChange={this.handleEmail}
                     />
                 </div>
+                { notValidEmailError && <StyledMismatchError>Not a valid email address
+                </StyledMismatchError> }
+                { emailExists && <StyledMismatchError>Email exists already
+                </StyledMismatchError> }
                 <StyledInputContainer>
                     <StyledSpan>linkco.in/</StyledSpan>
                     <StyledInput
@@ -200,6 +294,8 @@ export default class Form extends Component {
                         onBlur={this.handleClickUsernameBlur}
                     />
                 </StyledInputContainer>
+                { usernameExists && <StyledMismatchError>Username exists already
+                </StyledMismatchError> }
                 <div>
                 <div>Password</div>
                     <StyledInput
@@ -224,7 +320,7 @@ export default class Form extends Component {
                 </div>
                 {showPasswordMismatchError && <StyledMismatchError>Password fields must match
 </StyledMismatchError>}
-                <StyledButton disabled={showPasswordMismatchError} type="submit">Submit</StyledButton>
+                <StyledButton disabled={disableSubmitButton} type="submit">Submit</StyledButton>
                 <Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
                     <StyledSignin>Already have an account?</StyledSignin>
                     </Link>

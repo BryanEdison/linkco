@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
+
+import AuthService from "./services/auth.service";
 
 
 const StyledContainer = styled.div`
@@ -39,27 +42,34 @@ const StyledLinkBox = styled.a`
 
 const StyledHeader = styled.div`
   font-size: 20px;
-  font-weighht: bold;
+  font-weight: bold;
 `
 
 
-const Profile = () => {
-    const links = [{name: 'instagram', url: 'https://instagram.com/ealulema'},{name: 'facebook', url: 'https://facebook.com/ealulema'},{name: 'youtube', url: 'https://youtube.com'}]
-    return (
-        <StyledContainer>
-            <StyledDiv>
-            <StyledHeader>@ealulema</StyledHeader>
-            {links.map((link, idx) => 
-                (<StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
-                <div key={idx}>
-                <div>{link.name}</div>
-                </div>
-                </StyledLinkBox>
-                )
-            )}
-            </StyledDiv>
-        </StyledContainer>
-    )
-}
+export default class Profile extends Component {
+    constructor(props) {
+        super(props);
 
-export default Profile
+        this.state = {
+            // currentUser: AuthService.getCurrentUser()
+        };
+    }
+    render() {
+        const links = [{ name: 'instagram', url: 'https://instagram.com/ealulema' }, { name: 'facebook', url: 'https://facebook.com/ealulema' }, { name: 'youtube', url: 'https://youtube.com' }]
+        return (
+            <StyledContainer>
+                <StyledDiv>
+                    <StyledHeader></StyledHeader>
+                    {links.map((link, idx) =>
+                        (<StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
+                            <div key={idx}>
+                                <div>{link.name}</div>
+                            </div>
+                        </StyledLinkBox>
+                        )
+                    )}
+                </StyledDiv>
+            </StyledContainer>
+        )
+    }
+}
