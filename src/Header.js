@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-
+import AuthService from './services/auth.service.js'
 
 const StyledHeader = styled.div`
     display: flex;
@@ -55,17 +55,19 @@ const StyledRightHeader = styled.div`
 `
 
  const Header = (props) => {
+     console.log('check auth', AuthService.checkAuth());
+     const isAuthorized = AuthService.checkAuth();
     return (
         <StyledContainer>
             <StyledHeaderContainer>
                 <StyledHeader>linkco</StyledHeader>
                 <StyledRightHeader>
-                <Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
+                { isAuthorized ? <StyledSignup onClick={() => AuthService.logout()}>Log out</StyledSignup> : <React.Fragment><Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
                     <StyledLogin>Log In</StyledLogin>
                     </Link>
                         <Link to="/signup/" style={{ textDecoration: 'none' }}>
                             <StyledSignup> Sign up free</StyledSignup>
-                        </Link>
+                        </Link> </React.Fragment> }
                 </StyledRightHeader>
             </StyledHeaderContainer>
         </StyledContainer>

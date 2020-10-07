@@ -36,7 +36,6 @@ class AuthService {
       .catch(e => {
         console.log('error', e);
     });
-    
   }
 
   logout() {
@@ -53,7 +52,8 @@ class AuthService {
   }
 
   getCurrentUser(id) {
-      return axios.get(API_URL + "profile/" + id)
+    let token = inMemoryJWT.getToken();
+      return axios.post(API_URL + "profile/" + id, {token})
         .then(response => {
           return response.data;
         })

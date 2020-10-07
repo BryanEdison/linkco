@@ -89,9 +89,8 @@ mongodb.MongoClient.connect(uri, (err, db) => {
     });
   });
 
-  app.get("/profile/:id", (verify, res) => {
-    let req = verify;
-    let userid = req.params.id
+  app.post("/profile/:id", (req, res, next) => verify(req, res, next), (req, res) => {
+    let userid = req.params.id;
     collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
       if (err) {
         res.send("An error occured in getting the user info.");
