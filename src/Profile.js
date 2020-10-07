@@ -51,15 +51,19 @@ export default class Profile extends Component {
         super(props);
 
         this.state = {
-            // currentUser: AuthService.getCurrentUser()
+            currentUser: {}
         };
+    }
+
+    async componentDidMount() {
+      this.setState({currentUser: await AuthService.getCurrentUser(this.props.userid)})
     }
     render() {
         const links = [{ name: 'instagram', url: 'https://instagram.com/ealulema' }, { name: 'facebook', url: 'https://facebook.com/ealulema' }, { name: 'youtube', url: 'https://youtube.com' }]
         return (
             <StyledContainer>
                 <StyledDiv>
-                    <StyledHeader></StyledHeader>
+                    <StyledHeader>@{this.state.currentUser?.user?.username}</StyledHeader>
                     {links.map((link, idx) =>
                         (<StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
                             <div key={idx}>

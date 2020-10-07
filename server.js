@@ -7,8 +7,10 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const port = 4567; // port to listen on
 
-const { verify } = require('./middleware')
+const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
+const ObjectID = require('mongodb').ObjectID;
+
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
@@ -41,8 +43,7 @@ mongodb.MongoClient.connect(uri, (err, db) => {
   // Returns with the JSON data about the user (if there is a user with that username)
   // Example request: https://mynodeserver.com/myusername
 
-  app.post("/login", (verify, res) => {
-    let req = verify;
+  app.post("/login", (req, res) => {
     collection.find({ username: req.body.username }).toArray((err, docs) => {
       if (err) { // if an error occurred
         res.send("An error occured in getting the user info.");
@@ -88,8 +89,22 @@ mongodb.MongoClient.connect(uri, (err, db) => {
     });
   });
 
-  // app.get("/user", (verify, res) => {
-  // });
+  app.get("/profile/:id", (verify, res) => {
+    let req = verify;
+    let userid = req.params.id
+    collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
+      if (err) {
+        res.send("An error occured in getting the user info.");
+        console.log(err)
+      } else {
+        if (docs.length > 0) {
+          res.send({ user: docs[0] })
+        } else {
+          res.send("Original username.");
+        }
+      }
+    });    
+  });
   
 // Check if username exists
   app.post("/userNameCheck", (req, res) => {

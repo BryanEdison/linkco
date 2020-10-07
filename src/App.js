@@ -21,7 +21,7 @@ import ProtectedRoute from './ProtectedRoute';
             <Route path="/signup/:username" component={Signup}/>
             <Route exact path="/signup/" component={Signup}/>
             <Route exact path="/login/" component={Login}/>
-            <ProtectedRoute path="/profile" component={Profile} />
+            <ProtectedRoute path="/profile/:userid" component={Profile} />
             <ProtectedRoute path="/settings" />
           </Switch>
         </div>

@@ -30,9 +30,8 @@ class AuthService {
       .then(response => {
         if (response.data.token) {
           inMemoryJWT.setToken(response.data.token)
-          // localStorage.setItem("user", JSON.stringify(response.data));
         }
-        return response.data;
+        return response.data._id;
       })
       .catch(e => {
         console.log('error', e);
@@ -53,9 +52,16 @@ class AuthService {
     });
   }
 
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem('user'));;
-  }
+  getCurrentUser(id) {
+      return axios.get(API_URL + "profile/" + id)
+        .then(response => {
+          return response.data;
+        })
+        .catch(e => {
+          console.log('error', e);
+      });
+      
+    }
 
   checkAuth() {
     return inMemoryJWT.getToken() ? true : false;
@@ -64,7 +70,7 @@ class AuthService {
   checkError(error) {
     const status = error.status;
     if (status === 401 || status === 403) {
-      inMemoryJWT.ereaseToken();
+      inMemoryJWT.eraseToken();
       return Promise.reject();
     }
     return Promise.resolve();

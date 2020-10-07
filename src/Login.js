@@ -84,7 +84,7 @@ const StyledInput = styled.input`
     handleSubmit = (event) => {
         AuthService.login(this.state.username, this.state.password).then(
             (response) => {
-              this.props.history.push("/profile");
+              this.props.history.push(`/profile/${response}`);
             },
             error => {
               const resMessage =
