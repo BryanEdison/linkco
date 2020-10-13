@@ -55,7 +55,6 @@ const StyledRightHeader = styled.div`
 `
 
  const Header = (props) => {
-     console.log('check auth', AuthService.checkAuth());
      const isAuthorized = AuthService.checkAuth();
     return (
         <StyledContainer>

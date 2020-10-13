@@ -51,6 +51,13 @@ class AuthService {
     });
   }
 
+  editUser(id, links) {
+    let token = inMemoryJWT.getToken();
+    return axios.put(API_URL + id, {
+      id, links, token
+    });
+  }
+
   getCurrentUser(id) {
     let token = inMemoryJWT.getToken();
       return axios.post(API_URL + "profile/" + id, {token})

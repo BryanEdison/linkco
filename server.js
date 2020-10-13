@@ -173,60 +173,20 @@ mongodb.MongoClient.connect(uri, (err, db) => {
     });
   });
 
-  // this doesn't create a new user but rather updates an existing one by the user name
-  // a request looks like this: `https://nodeserver.com/username23` plus the associated JSON data sent in
-  // the `body` property of the PUT request
-  // this doesn't create a new user but rather updates an existing one by the user name
-  // a request looks like this: `https://nodeserver.com/username23?pass=12345` plus the associated JSON data sent in the body of the req
-  app.put("/:user", (req, res) => {
-    // get the user, compare the hashed + salted password sent in the query to the one in the database, if they match, then update the data
-    collection.find({ user: req.params.user }).toArray((err, docs) => {
-      if (err) {
-        res.send("An error occured in getting the user info." );
-      } else {
-        // there were matches (there are users with that username)
-        if (docs.length > 0) {
-          // get the first users password (each user should have a unique username)
-          let hashedPasswordInDatabase = docs[0].pass;
-          
-          // get the salt
-          const salt = docs[0].salt;
-
-          // if there was no password sent in the query of the url (after the `?`)
-          if (!req.query.pass) {
-            res.send("There was no password associated with the GET req.");
-          }
-
-          // The password sent in the GET req.
-          // Enclose in template to make sure it is a string (so if a password is a number, it treats it as a string).
-          // Prepend the salt 
-          const hashedQueryPassword = hash(`${salt}${req.query.pass}`); 
-
-          // if the password that was sent with the get request matches the user's password
-          if (hashedPasswordInDatabase === hashedQueryPassword) {
-            // update user info in database
-
-            // hash the password for storing
-            req.body.pass = hash(req.body.pass);
-            collection.updateOne(
-              { user: req.params.user }, // if the username is the same, update the user
-              { $set: { ...req.body, user: req.params.user, salt } }, // make sure to include the salt in the update of info
-              (err, r) => {
-                if (err) {
-                  console.log("An error occurred in updating information");
-                }
-              }
-            );
-            res.send("All went well");
-          } else {
-            // otherwise, the password was wrong. Generic error message sent back
-            res.send("Something went wrong in user authentication.");
-          }
+  app.put("/:user", (req, res, next) => verify(req, res, next), (req, res) => {
+    let userid = req.body.id;
+    collection.updateOne(
+      { _id: ObjectID(userid)}, {$set: {links: req.body.links }},
+      (err, r) => {
+        if (err) {
+          console.log("An error occurred in updating information");
+          res.send(err)
         } else {
-          res.send("There were no users with that name found. ");
+          console.log(r, 'response')
+          res.send(r)
         }
       }
-    });
+    );
   });
 
   // listen for requests
