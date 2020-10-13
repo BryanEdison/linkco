@@ -1,9 +1,9 @@
 import axios from "axios";
 import inMemoryJWT from './inMemoryJwt';
 
-let API_URL = "http://localhost:4567/";
+// let API_URL = "http://localhost:4567/";
 //Switch to bottom for production
-// let API_URL = "http://linkco.herokuapp.com/"
+let API_URL = "http://linkco.herokuapp.com/"
 
 let headers = new Headers();
 
