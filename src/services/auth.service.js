@@ -6,7 +6,7 @@ var API_URL;
 if (process.env.NODE_ENV === 'development') {
   API_URL = process.env.LOCAL_URL  // http://localhost:4567
 } else if (process.env.NODE_ENV === 'production') {
-  API_URL = process.env.DEPLOY_URL // http://http://linkco.herokuapp.com/
+  API_URL = process.env.DEPLOY_URL // http://linkco.herokuapp.com/
 }
 
 
@@ -26,6 +26,7 @@ const config = {
 
 class AuthService {
   login(username, password) {
+    console.log('hereiam', API_URL)
     return axios
       .post(API_URL + "login", {
         username,
