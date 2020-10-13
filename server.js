@@ -5,12 +5,19 @@ const crypto = require("crypto");
 const csprng = require('csprng');
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const port = 4567; // port to listen on
+const path = require("path");
+
+let port = 4567; // port to listen on
+if (process.env.NODE_ENV === 'development') {
+ port = 3000;
+}
 
 const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 
+app.use(express.static(path.join(__dirname, "..", "build")));
+app.use(express.static("build"));
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
@@ -187,6 +194,10 @@ mongodb.MongoClient.connect(uri, (err, db) => {
         }
       }
     );
+  });
+
+  app.use((req, res, next) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
   });
 
   // listen for requests
