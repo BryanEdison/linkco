@@ -16,7 +16,7 @@ const ObjectID = require('mongodb').ObjectID;
 app.use(express.static(path.join(__dirname, "..", "build")));
 app.use(express.static("build"));
 
-app.use(cors({credentials: true, origin: 'http://linkco.herokuapp.com'})); // allow Cross-domain requests
+app.use(cors({credentials: true, origin: 'http://localhost:4567'})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
 
 app.use(function(req, res, next) {
@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
   //   "Access-Control-Allow-Headers",
   //   "x-access-token, Origin, Content-Type, Accept"
   // );
-  res.header('Access-Control-Allow-Origin', 'http://linkco.herokuapp.com');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4567');
   res.header('Access-Control-Allow-Credentials', true);
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header("Access-Control-Allow-Headers", "content-type");
