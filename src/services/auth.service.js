@@ -1,14 +1,9 @@
 import axios from "axios";
 import inMemoryJWT from './inMemoryJwt';
 
-var API_URL;
-
-if (process.env.NODE_ENV === 'development') {
-  API_URL = process.env.LOCAL_URL  // http://localhost:4567
-} else if (process.env.NODE_ENV === 'production') {
-  API_URL = process.env.DEPLOY_URL // http://linkco.herokuapp.com/
-}
-
+// let API_URL = "http://localhost:4567/";
+//Switch to bottom for production
+let API_URL = "http://linkco.herokuapp.com/"
 
 let headers = new Headers();
 
@@ -26,7 +21,7 @@ const config = {
 
 class AuthService {
   login(username, password) {
-    console.log('hereiam', API_URL)
+    console.log('hereiam', API_URL, process.env, 'yelp')
     return axios
       .post(API_URL + "login", {
         username,
