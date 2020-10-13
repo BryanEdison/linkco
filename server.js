@@ -21,7 +21,7 @@ const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 
-app.use(express.static(path.join(__dirname, "..", "build")));
+app.use(express.static(path.join(__dirname, "build")));
 app.use(express.static("build"));
 
 app.use(cors({credentials: true, origin: corsUrl})); // allow Cross-domain requests
