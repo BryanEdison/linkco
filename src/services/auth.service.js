@@ -1,15 +1,20 @@
 import axios from "axios";
 import inMemoryJWT from './inMemoryJwt';
 
+var API_URL;
 
-const API_URL = "http://localhost:4567/";
+if (process.env.NODE_ENV === 'development') {
+  API_URL = process.env.LOCAL_URL  // http://localhost:4567
+} else if (process.env.NODE_ENV === 'production') {
+  API_URL = process.env.DEPLOY_URL // http://http://linkco.herokuapp.com/
+}
 
 
 let headers = new Headers();
 
 headers.append('Content-Type', 'application/json');
 headers.append('Accept', 'application/json');
-headers.append('Origin', 'http://localhost:3000');
+headers.append('Origin', API_URL);
 
 const config = {
   withCredentials: true,
