@@ -9,6 +9,14 @@ const path = require("path");
 
 const port = 4567; // port to listen on
 
+var corsUrl;
+
+if (process.env.NODE_ENV === 'development') {
+  corsUrl = process.env.LOCAL_URL  // http://localhost:8080
+} else if (process.env.NODE_ENV === 'production') {
+  corsUrl = process.env.DEPLOY_URL // http://http://linkco.herokuapp.com/
+}
+
 const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
@@ -35,7 +43,7 @@ app.use(function(req, res, next) {
 // make sure in the free tier of MongoDB atlas when connecting, to
 // select version 2.2.* as the node.js driver instead of the default 3.0
 // put your URI HERE ⬇
-const uri = "mongodb://ealulema:franceS125@cluster0-shard-00-00.rki0z.mongodb.net:27017,cluster0-shard-00-01.rki0z.mongodb.net:27017,cluster0-shard-00-02.rki0z.mongodb.net:27017/linkco?ssl=true&replicaSet=atlas-d21c1e-shard-0&authSource=admin&retryWrites=true&w=majority";
+const uri = process.env.MONGOLAB_URI;
 
 // connect to your MongoDB database through your URI. 
 // The connect() function takes a uri and callback function as arguments.
