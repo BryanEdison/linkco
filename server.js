@@ -12,7 +12,7 @@ const port = 4567; // port to listen on
 var corsUrl;
 
 if (process.env.NODE_ENV === 'development') {
-  corsUrl = process.env.LOCAL_URL  // http://localhost:8080
+  corsUrl = process.env.LOCAL_URL  // http://localhost:4567/
 } else if (process.env.NODE_ENV === 'production') {
   corsUrl = process.env.DEPLOY_URL // http://http://linkco.herokuapp.com/
 }
@@ -101,6 +101,25 @@ mongodb.MongoClient.connect(uri, (err, db) => {
     });
   });
 
+  app.get('/profile/:username', (req, res, next) => {
+    collection.find({username: req.params.username}).toArray((err, docs) => {
+      if (err) { // if an error occurred
+        res.send("An error occured in getting info.");
+      } else {
+        // there were matches (there are users with that username)
+        if (docs.length > 0) {
+          let resObject = {
+            username: docs[0].username,
+            links: docs[0].links
+          }
+          res.status(200).send(resObject)
+        } else {
+          res.status(400).send({ message: 'User not found'})
+        }
+      }
+    });
+  })
+
   app.post("/profile/:id", (req, res, next) => verify(req, res, next), (req, res) => {
     let userid = req.params.id;
     collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
@@ -153,7 +172,7 @@ mongodb.MongoClient.connect(uri, (err, db) => {
   // Creates a new user in the collection with the `user` parameter and the JSON sent with the req in the `body` property
   // Example request: https://mynodeserver.com/myNEWusername
 // the password is sent in the body of the request as the `pass` field
-  app.post("/signup/:user", (req, res) => {
+  app.post("/signup/", (req, res) => {
     // generate the salt using the npm package 'csprng'. 
     // The first argument is the number of bits and the second is the radix (how many characters to choose from, basically)
     const salt = csprng(160, 36);
@@ -176,7 +195,20 @@ mongodb.MongoClient.connect(uri, (err, db) => {
               if (err) {
                 res.send("An error occured.");
               } else {
-                res.send("All went well.");
+              let token = jwt.sign({ id: r.insertedId }, process.env.ACCESS_TOKEN_SECRET, {
+                algorithm: "HS256",
+                expiresIn: process.env.ACCESS_TOKEN_LIFE
+              })  
+
+              //create the refresh token with the longer lifespan
+              let refreshToken = jwt.sign({ id: r.insertedId }, process.env.REFRESH_TOKEN_SECRET, {
+                algorithm: "HS256",
+                expiresIn: process.env.REFRESH_TOKEN_LIFE
+            })
+
+            //use secure=true as well for HTTPS only, also { httpOnly: true}
+            res.cookie("jwt", refreshToken)
+            res.status(200).send({id: r.insertedId, token});
               }
             }
           );
@@ -194,7 +226,6 @@ mongodb.MongoClient.connect(uri, (err, db) => {
           console.log("An error occurred in updating information");
           res.send(err)
         } else {
-          console.log(r, 'response')
           res.send(r)
         }
       }

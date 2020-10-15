@@ -54,19 +54,21 @@ const StyledRightHeader = styled.div`
     align-items: center;
 `
 
- const Header = (props) => {
-     const isAuthorized = AuthService.checkAuth();
+const Header = () => {
+    const isAuthorized = AuthService.checkAuth();
     return (
         <StyledContainer>
             <StyledHeaderContainer>
-                <StyledHeader>linkco</StyledHeader>
+                <Link to="/" style={{ textDecoration: 'none' }}>
+                    <StyledHeader>linkco</StyledHeader>
+                </Link>
                 <StyledRightHeader>
-                { isAuthorized ? <StyledSignup onClick={() => AuthService.logout()}>Log out</StyledSignup> : <React.Fragment><Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
-                    <StyledLogin>Log In</StyledLogin>
+                    {isAuthorized ? <StyledSignup onClick={() => AuthService.logout()}><Link to="/" style={{ textDecoration: 'none', color: '#635858' }}>Log out</Link></StyledSignup> : <React.Fragment><Link to="/login/" style={{ textDecoration: 'none', color: '#635858' }}>
+                        <StyledLogin>Log In</StyledLogin>
                     </Link>
                         <Link to="/signup/" style={{ textDecoration: 'none' }}>
                             <StyledSignup> Sign up free</StyledSignup>
-                        </Link> </React.Fragment> }
+                        </Link> </React.Fragment>}
                 </StyledRightHeader>
             </StyledHeaderContainer>
         </StyledContainer>

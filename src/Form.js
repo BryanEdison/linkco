@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { isEmail } from "validator";
 
 import AuthService from "./services/auth.service";
@@ -60,7 +60,7 @@ const StyledSignin = styled.div`
     text-align: center;
 `
 
-export default class Form extends Component {
+class Form extends Component {
     constructor(props) {
         super(props)
         //possibly antipattern to copy state from props but can't think of better solution for usecase
@@ -173,7 +173,10 @@ export default class Form extends Component {
           this.state.password
         ).then(
           response => {
-            console.log(response.data.message)
+            if (response.status === 200) {
+                console.log(response.data.id,'insideform')
+                this.props.history.push(`/profile/${response.data.id}`)
+            }
           },
           error => {
             const resMessage =
@@ -182,8 +185,7 @@ export default class Form extends Component {
                 error.response.data.message) ||
               error.message ||
               error.toString();
-  
-            console.log(resMessage)
+            console.log('error signing up',resMessage)
           }
         );
 
@@ -328,3 +330,5 @@ export default class Form extends Component {
         )
     }
 }
+
+export default withRouter(Form)

@@ -8,6 +8,7 @@ import Home from './Home';
 import Signup from './Signup';
 import Login from './Login';
 import Profile from './Profile';
+import ProfileView from './ProfileView';
 import ProtectedRoute from './ProtectedRoute';
 
   export default function App() {
@@ -23,6 +24,7 @@ import ProtectedRoute from './ProtectedRoute';
             <Route exact path="/login/" component={Login}/>
             <ProtectedRoute path="/profile/:userid" component={Profile} />
             <ProtectedRoute path="/settings" />
+            <Route path="/:username/" component={ProfileView}/>
           </Switch>
         </div>
       </Router>

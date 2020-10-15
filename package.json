@@ -33,7 +33,7 @@
     "start-server": "node -r esm server.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "proxy": "http://localhost:8080"
+    "proxy": "http://localhost:4567"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -44,11 +44,18 @@ class AuthService {
   }
 
   register(username, email, password) {
-    return axios.post(API_URL + "signup/ealulema", {
+    return axios.post(API_URL + "signup/", {
       username,
       email,
       password
-    });
+    })
+    .then(response => {
+      if (response.data.token) {
+        inMemoryJWT.setToken(response.data.token)
+      }
+      //probably hide token instead of returning it
+      return response;
+    })
   }
 
   editUser(id, links) {
@@ -69,6 +76,17 @@ class AuthService {
       });
       
     }
+
+    getUser(username) {
+        return axios.get(API_URL + "profile/" + username)
+          .then(response => {
+            return response.data;
+          })
+          .catch(e => {
+            console.log('error', e);
+        });
+        
+      }
 
   checkAuth() {
     return inMemoryJWT.getToken() ? true : false;
