@@ -14,18 +14,18 @@ var corsUrl;
 if (process.env.NODE_ENV === 'development') {
   corsUrl = process.env.LOCAL_URL  // http://localhost:4567/
 } else if (process.env.NODE_ENV === 'production') {
-  corsUrl = process.env.DEPLOY_URL // http://http://linkco.herokuapp.com/
+  corsUrl = process.env.DEPLOY_URL // http://linkco.herokuapp.com/
 }
 
 const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 
-app.use(express.static(path.join(__dirname, "build")));
-app.use(express.static("build"));
-
 app.use(cors({credentials: true, origin: corsUrl})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
+
+app.use(express.static(path.join(__dirname, "build")));
+app.use(express.static("build"));
 
 app.use(function(req, res, next) {
   // res.header(
