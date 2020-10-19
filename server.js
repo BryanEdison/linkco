@@ -21,7 +21,8 @@ const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 
-app.use(cors({credentials: true, origin: corsUrl})); // allow Cross-domain requests
+// app.use(cors({credentials: true, origin: corsUrl})); // allow Cross-domain requests
+app.use(cors({credentials: true, origin: 'http://linkco.herokuapp.com/login'})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
 
 app.use(express.static(path.join(__dirname, "build")));
