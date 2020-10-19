@@ -3,7 +3,7 @@ import inMemoryJWT from './inMemoryJwt';
 
 // let API_URL = "http://localhost:4567/";
 //Switch to bottom for production
-let API_URL = "http://linkco.herokuapp.com/"
+let API_URL = "https://linkco.herokuapp.com/"
 
 let headers = new Headers();
 
@@ -65,6 +65,12 @@ class AuthService {
     });
   }
 
+  editUserCount(id, links) {
+    return axios.put(API_URL + id + '/count', {
+      id, links
+    });
+  }
+
   getCurrentUser(id) {
     let token = inMemoryJWT.getToken();
       return axios.post(API_URL + "profile/" + id, {token})
@@ -85,7 +91,6 @@ class AuthService {
           .catch(e => {
             console.log('error', e);
         });
-        
       }
 
   checkAuth() {

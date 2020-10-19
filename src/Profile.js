@@ -247,11 +247,12 @@ export default class Profile extends Component {
                               handleToggle={this.handleToggleClick}
                             />
                             </div> }
-                            <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link}>
+                            <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
                                 <StyledTextContainer key={idx}>
-                                    <StyledText>{link}</StyledText>
+                                    <StyledText>{link.url}</StyledText>
                                 </StyledTextContainer>
                             </StyledLinkBox>
+                            <div>{link.visitors} clicks</div>
                         </StyledLinkContainer>
                         )
                     )}

@@ -84,10 +84,19 @@ export default class ProfileView extends Component {
 
     async componentDidMount() {
       let currentUser = await AuthService.getUser(this.props.match.params.username);
+      console.log('crntuser', currentUser)
       this.setState({
+        id: currentUser.id,
         username: currentUser.username,
         links: currentUser.links
       })
+    }
+
+    handleClick = (idx) => {
+      const updatedLinks = this.state.links
+      updatedLinks[idx].visitors++;
+      this.setState({links: updatedLinks})
+      AuthService.editUserCount(this.state.id, this.state.links)
     }
 
     render() {
@@ -100,10 +109,10 @@ export default class ProfileView extends Component {
                     <StyledHeader>@{username}</StyledHeader>
                     {links?.map((link, idx) =>
                         (
-                          <StyledLinkContainer>
-                            <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link}>
+                          <StyledLinkContainer onClick={() => this.handleClick(idx)}>
+                            <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
                                 <StyledTextContainer key={idx}>
-                                    <StyledText>{link}</StyledText>
+                                    <StyledText>{link.url}</StyledText>
                                 </StyledTextContainer>
                             </StyledLinkBox>
                         </StyledLinkContainer>

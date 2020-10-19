@@ -114,7 +114,8 @@ mongodb.MongoClient.connect(uri, (err, db) => {
         if (docs.length > 0) {
           let resObject = {
             username: docs[0].username,
-            links: docs[0].links
+            links: docs[0].links,
+            id: docs[0]._id
           }
           res.status(200).send(resObject)
         } else {
@@ -222,6 +223,21 @@ mongodb.MongoClient.connect(uri, (err, db) => {
   });
 
   app.put("/:user", (req, res, next) => verify(req, res, next), (req, res) => {
+    let userid = req.body.id;
+    collection.updateOne(
+      { _id: ObjectID(userid)}, {$set: {links: req.body.links }},
+      (err, r) => {
+        if (err) {
+          console.log("An error occurred in updating information");
+          res.send(err)
+        } else {
+          res.send(r)
+        }
+      }
+    );
+  });
+
+  app.put("/:user/count", (req, res) => {
     let userid = req.body.id;
     collection.updateOne(
       { _id: ObjectID(userid)}, {$set: {links: req.body.links }},
