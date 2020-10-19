@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express"); // the library we will use to handle requests
 const mongodb = require("mongodb"); // load mongodb
 const crypto = require("crypto");
+const helmet = require('helmet');
 const csprng = require('csprng');
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -21,11 +22,11 @@ const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 
-app.use(cors({credentials: true, origin: 'https://www.logchimp.com/'})); // allow Cross-domain requests
+// app.use(cors({credentials: true, origin: 'https://www.logchimp.com/'})); // allow Cross-domain requests
 // app.use(cors({origin: corsUrl})); // allow Cross-domain requests
 
 app.use(require("body-parser").json()); // automatically parses request data to JSON
-
+app.use(helmet.referrerPolicy({policy: 'strict-origin-when-cross-origin'}));
 app.use(express.static(path.join(__dirname, "build")));
 app.use(express.static("build"));
 
