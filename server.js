@@ -21,10 +21,8 @@ if (process.env.NODE_ENV === 'development') {
 const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
-
-app.use(cors({credentials: true, origin: corsUrl})); // allow Cross-domain requests
-// app.use(cors({origin: corsUrl})); // allow Cross-domain requests
-
+app.options('*', cors()); // include before other routes
+app.use(cors({credentials: true, origin: true})); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
 app.use(helmet.referrerPolicy({policy: 'strict-origin-when-cross-origin'}));
 app.use(express.static(path.join(__dirname, "build")));
