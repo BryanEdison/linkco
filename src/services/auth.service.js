@@ -1,9 +1,9 @@
 import axios from "axios";
 import inMemoryJWT from './inMemoryJwt';
 
-// let API_URL = "http://localhost:4567/";
+let API_URL = "http://localhost:4567/";
 //Switch to bottom for production
-let API_URL = "https://linkco.herokuapp.com/"
+// let API_URL = "https://linkco.herokuapp.com/"
 
 let headers = new Headers();
 
@@ -68,6 +68,12 @@ class AuthService {
   editUserCount(id, links) {
     return axios.put(API_URL + id + '/count', {
       id, links
+    });
+  }
+
+  editVisitorCount(id, data) {
+    return axios.put(API_URL + id + '/visitorCount', {
+      id, data
     });
   }
 

@@ -104,7 +104,15 @@ const StyledSpan = styled.span`
   
 `
 
+const StyledSub = styled.div`
+  font-size: 14px;
+`
+
 const StyledInputContainer = styled.div`
+  display: flex;
+`
+
+const StyledSubContainer = styled.div`
   display: flex;
 `
 
@@ -176,6 +184,12 @@ export default class Home extends Component {
           </StyledInputContainer>
         </StyledForm>
         </StyledFormContainer>
+        <StyledSubContainer>
+        <StyledSub>Already on LinkCo?&nbsp;</StyledSub>
+        <Link to={'/login'} style={{ color: 'black' }}>
+        <StyledSub>Log in</StyledSub>
+        </Link>
+        </StyledSubContainer>
       </StyledDiv>
       </StyledContainer>
     )

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import dotenv from 'dotenv'
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import Header from './Header';
-
 import AuthService from "./services/auth.service";
+dotenv.config()
 
 const StyledContainer = styled.div`
   height: 100vh;
@@ -30,7 +31,7 @@ const StyledLinkBox = styled.a`
   margin: 10px;
   text-decoration: none;
   color: white;
-  border-radius: 5px;
+  border-radius: 10px;
 
   @media only screen and (min-width: 440px) {
     width: 500px;
@@ -72,54 +73,67 @@ const StyledImg = styled.img`
 `
 
 export default class ProfileView extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            currentUser: {},
-            editMode: false,
-            links: [],
-        };
-    }
+    this.state = {
+      currentUser: {},
+      editMode: false,
+      username: '',
+      links: [],
+      visitors: {}
+    };
+  }
 
-    async componentDidMount() {
-      let currentUser = await AuthService.getUser(this.props.match.params.username);
-      console.log('crntuser', currentUser)
-      this.setState({
-        id: currentUser.id,
-        username: currentUser.username,
-        links: currentUser.links
-      })
-    }
+  async componentDidMount() {
+    let currentUser = await AuthService.getUser(this.props.match.params.username);
+    await this.setState({
+      id: currentUser.id,
+      username: currentUser.username,
+      links: currentUser.links
+    })
+    var url = `https://geolocation-db.com/json/${process.env.REACT_APP_GEO_SECRET}`;
+    fetch(url)
+      .then(response => response.json())
+      .then(data => this.addVisitorCount(data));
+  }
 
-    handleClick = (idx) => {
-      const updatedLinks = this.state.links
-      updatedLinks[idx].visitors++;
-      this.setState({links: updatedLinks})
-      AuthService.editUserCount(this.state.id, this.state.links)
-    }
+  addVisitorCount = (location) => {
+    console.log(location);
+    const setting = `${location.state}, ${location.country_name}`;
+    AuthService.editVisitorCount(this.state.id, setting)
+  }
 
-    render() {
-      const { links, username } = this.state;
-        return (
-            <StyledContainer>
-              <Header/>
-                <StyledDiv>
-                    <StyledImg></StyledImg>
-                    <StyledHeader>@{username}</StyledHeader>
-                    {links?.map((link, idx) =>
-                        (
-                          <StyledLinkContainer onClick={() => this.handleClick(idx)}>
-                            <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
-                                <StyledTextContainer key={idx}>
-                                    <StyledText>{link.url}</StyledText>
-                                </StyledTextContainer>
-                            </StyledLinkBox>
-                        </StyledLinkContainer>
-                        )
-                    )}
-                </StyledDiv>
-            </StyledContainer>
-        )
-    }
+  handleClick = (idx) => {
+    const updatedLinks = this.state.links
+    updatedLinks[idx].visitors++;
+    this.setState({ links: updatedLinks })
+    console.log('env', process.env)
+
+    AuthService.editUserCount(this.state.id, this.state.links)
+  }
+
+  render() {
+    const { links, username } = this.state;
+    return (
+      <StyledContainer>
+        <Header />
+        <StyledDiv>
+          <StyledImg></StyledImg>
+          <StyledHeader>@{username}</StyledHeader>
+          {links?.map((link, idx) =>
+            (
+              <StyledLinkContainer onClick={() => this.handleClick(idx)}>
+                <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
+                  <StyledTextContainer key={idx}>
+                    <StyledText>{link.url}</StyledText>
+                  </StyledTextContainer>
+                </StyledLinkBox>
+              </StyledLinkContainer>
+            )
+          )}
+        </StyledDiv>
+      </StyledContainer>
+    )
+  }
 }
