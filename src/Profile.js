@@ -26,23 +26,26 @@ const StyledSpan = styled.span`
 const StyledProfileView = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
   min-height: 30vh;
 
   @media only screen and (min-width: 440px) {
     background-color: rgb(123 117 117 / 10%);
+    padding: 40px 0;
+    height: 800px;
   }
 `;
 
 const StyledMobileView = styled.div`
   @media only screen and (min-width: 440px) {
     margin: 20px 50px;
+    height: 80%;
     background-color: white;
-    border: solid 8px black;
-    border-radius: 12px;
+    border: solid 28px black;
+    border-radius: 50px;
     padding: 15px;
+    min-width: 300px;
   }
 `
 
@@ -62,8 +65,8 @@ const StyledLinkBox = styled.a`
   border-radius: 10px;
 
   @media only screen and (min-width: 440px) {
-    width: 430px;
-    height: 30px;
+    width: 280px;
+    height: 50px;
   }
 `
 
@@ -95,6 +98,7 @@ const StyledButton = styled.button`
 const StyledLinkContainer = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
 `;
 
 const StyledInput = styled.input`
@@ -140,8 +144,9 @@ const StyledImg = styled.img`
 const StyledBodyContainer = styled.div`
   @media only screen and (min-width: 500px) {
     display: flex;
-    justify-content: space-evenly
+    justify-content: space-evenly;
     margin: 0 15px;
+    height: 100%;
   }
 `
 
@@ -164,7 +169,8 @@ export default class Profile extends Component {
     currentUser.user.links.forEach((link) => {
       value.push(false)
     })
-    this.setState({
+    await this.setState({
+      currentUser: currentUser.user,
       username: currentUser.user.username,
       links: currentUser.user.links,
       value
@@ -232,13 +238,20 @@ export default class Profile extends Component {
     event.preventDefault();
   }
 
+  handleLinkChange = () => {
+    AuthService.getCurrentUser(this.props.userid)
+      .then(response => {
+        this.setState({ links: response?.user?.links})
+      })
+  }
+
   render() {
-    const { links, username, newLink, editMode } = this.state;
+    const { links, username, newLink, editMode, currentUser } = this.state;
     return (
       <StyledContainer>
         <Header />
         <StyledBodyContainer>
-          <EditView />
+          <EditView handleLinkChange={this.handleLinkChange} currentUser={currentUser} />
           <StyledProfileView>
             <StyledMobileView>
               <StyledImg></StyledImg>
@@ -270,7 +283,7 @@ export default class Profile extends Component {
                     </div>}
                     <StyledLinkBox target='_blank' rel="noopener noreferrer" href={link.url}>
                       <StyledTextContainer key={idx}>
-                        <StyledText>{link.url}</StyledText>
+                        <StyledText>{link.name}</StyledText>
                       </StyledTextContainer>
                     </StyledLinkBox>
                   </StyledLinkContainer>

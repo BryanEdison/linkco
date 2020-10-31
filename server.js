@@ -229,11 +229,78 @@ mongodb.MongoClient.connect(uri, (err, db) => {
           console.log("An error occurred in updating information");
           res.send(err)
         } else {
-          res.send(r)
+          collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
+            if (err) {
+              res.send("An error occured in getting the user info.");
+              console.log(err)
+            } else {
+              if (docs.length > 0) {
+                res.status(200).send({ user: docs[0].links })
+              } else {
+                res.send("User not found.");
+              }
+            }
+          });
         }
       }
     );
-  });
+	});
+
+	app.post("/:user/links", (req, res, next) => verify(req, res, next), (req, res) => {
+		let userid = req.body.id;
+		let link = { name: req.body.link.name, url: req.body.link.url, visitors: 0, id: ObjectID() }
+		collection.update(
+      { _id: ObjectID(userid) }, { $push: { links: link } },
+      (err, r) => {
+        if (err) {
+          console.log("An error occurred in updating information");
+          res.send(err)
+        } else {
+          collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
+            if (err) {
+              res.send("An error occured in getting the user info.");
+              console.log(err)
+            } else {
+              if (docs.length > 0) {
+                res.status(200).send({ user: docs[0].links })
+              } else {
+                res.send("User not found.");
+              }
+            }
+          });
+        }
+      }
+    );
+	});
+
+	app.put("/:user/links", (req, res, next) => verify(req, res, next), (req, res) => {
+		let userid = req.body.id;
+		let link = req.body.link;
+		console.log(link)
+		collection.update(
+      { _id: ObjectID(userid) }, { $pull: { links: { id: ObjectID(link) } } },
+      (err, r) => {
+        if (err) {
+          console.log("An error occurred in deleting information");
+          res.send(err)
+        } else {
+          collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
+            if (err) {
+              res.send("An error occured in getting the user info.");
+              console.log(err)
+            } else {
+              if (docs.length > 0) {
+                res.status(200).send({ user: docs[0].links })
+              } else {
+                res.send("User not found.");
+              }
+            }
+          });
+        }
+      }
+    );
+	});
+	
 
   app.put("/:user/count", (req, res) => {
     let userid = req.body.id;
@@ -258,7 +325,6 @@ mongodb.MongoClient.connect(uri, (err, db) => {
     const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     const yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
-    console.log(today)
 
     collection.find({ _id: ObjectID(userid) }).toArray((err, docs) => {
       if (err) { // if an error occurred

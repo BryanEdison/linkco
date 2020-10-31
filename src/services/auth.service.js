@@ -62,8 +62,40 @@ class AuthService {
     let token = inMemoryJWT.getToken();
     return axios.put(API_URL + id, {
       id, links, token
-    });
-  }
+    })
+    .then(response => {
+      return response;
+    })
+    .catch(e => {
+      console.log('error', e)
+    })
+	}
+	
+	addLink(id, link) {
+		let token = inMemoryJWT.getToken();
+    return axios.post(API_URL + id + '/links', {
+      id, link, token
+    })
+    .then(response => {
+      return response;
+    })
+    .catch(e => {
+      console.log('error', e)
+    })
+	}
+
+	deleteLink(id, link) {
+		let token = inMemoryJWT.getToken();
+    return axios.put(API_URL + id + '/links', {
+    	id, link, token
+    })
+    .then(response => {
+      return response;
+    })
+    .catch(e => {
+      console.log('error', e)
+    })
+	}
 
   editUserCount(id, links) {
     return axios.put(API_URL + id + '/count', {
