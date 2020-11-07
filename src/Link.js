@@ -69,7 +69,6 @@ export default class Link extends Component {
 	}
 
 	handleDelete = (link, handleLinkChange, handleTabLinkChange) => {
-		console.log(this.props.id, link)
 		AuthService.deleteLink(this.props.id, link)
 			.then(response => {
 				if (response.status === 200) {
