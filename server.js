@@ -15,14 +15,14 @@ var corsUrl;
 if (process.env.NODE_ENV === 'development') {
   corsUrl = process.env.LOCAL_URL  // http://localhost:4567/
 } else if (process.env.NODE_ENV === 'production') {
-  corsUrl = process.env.DEPLOY_URL // linkco.herokuapp.com/
+  corsUrl = process.env.DEPLOY_URL // http://linkco.herokuapp.com/
 }
 
 const { verify } = require('./src/services/middleware')
 const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 app.options('*', cors()); // include before other routes
-app.use(cors({ credentials: true, origin: 'linkco.herokuapp.com' })); // allow Cross-domain requests
+app.use(cors({ credentials: true, origin: 'http://linkco.herokuapp.com' })); // allow Cross-domain requests
 app.use(require("body-parser").json()); // automatically parses request data to JSON
 app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
 app.use(express.static(path.join(__dirname, "build")));
