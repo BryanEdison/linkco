@@ -24,7 +24,7 @@ const config = {
 class AuthService {
   login(username, password) {
     return axios
-      .post(API_URL + "login", {
+      .post(API_URL + "login/", {
         username,
         password
       }, config)
