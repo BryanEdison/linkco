@@ -9,8 +9,8 @@ let API_URL = "https://logchimp.com/"
 
 let headers = new Headers();
 
-headers.append('Content-Type', 'application/json');
-headers.append('Accept', 'application/json');
+headers.append('Content-Type', 'application/x-www-form-urlencoded');
+headers.append('Accept', 'application/x-www-form-urlencoded');
 headers.append('Origin', API_URL);
 
 const config = {
@@ -24,7 +24,7 @@ const config = {
 class AuthService {
   login(username, password) {
     return axios
-      .post(API_URL + "login/", {
+      .post(API_URL + "login", {
         username,
         password
       }, config)
