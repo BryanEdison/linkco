@@ -23,7 +23,7 @@ const app = express(); // instantiate express
 const ObjectID = require('mongodb').ObjectID;
 app.options('*', cors()); // include before other routes
 // app.use(cors({ credentials: true, origin: 'http://linkco.herokuapp.com' })); // allow Cross-domain requests
-app.use(cors({ credentials: true, origin: "https://logchimp.com/" })); // allow Cross-domain requests
+app.use(cors({ credentials: true, origin: "/" })); // allow Cross-domain requests
 
 app.use(require("body-parser").json()); // automatically parses request data to JSON
 app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
